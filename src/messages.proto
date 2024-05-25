@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message BinaryContent {
+    bytes data = 2;
+}
+
+message Response {
+  uint32 partId = 2;
+  uint32 totalParts = 3;
+  BinaryContent binContent = 4;
+}
