@@ -11,6 +11,9 @@ class ImageChannel(Channel):
     def __init__(self, host: str, name: str, image: str):
         super().__init__(host, name)
         self.image = image
+        self.reset_bin_content()
+
+    def reset_bin_content(self):
         self.bin_content = b''
 
     def handle_receive(self, ch, method, properties, body):
@@ -31,6 +34,7 @@ class ImageChannel(Channel):
             image_stream = io.BytesIO(self.bin_content)
             img = Image.open(image_stream)
             img.show()
+            self.reset_bin_content()
 
 
 @click.command
