@@ -45,11 +45,6 @@ def main(broker: str, chunks: int, image: str):
         response.binContent.data = bin_content[s_offset:e_offset]
         s_offset += chunk_size
 
-        # Serialize the message to a binary string
-        print(f"Sending image part {i+1} of {chunks}")
-        with open(f"object{i}.bin", "wb") as f:
-            f.write(response.SerializeToString())
-
         # Publish the reponse
         channel.send_response(response)
 

@@ -16,11 +16,7 @@ class ImageChannel(Channel):
     def reset_bin_content(self):
         self.bin_content = b''
 
-    def handle_receive(self, ch, method, properties, body):
-        # Deserialize the response message received from the channel
-        response = Response()
-        response.ParseFromString(body)
-
+    def handle_response(self, response: Response):
         # Collect binary parts
         self.bin_content += response.binContent.data
         part_id = response.partId + 1
@@ -40,8 +36,7 @@ class ImageChannel(Channel):
 @click.command
 @click.option("--broker", "-b", help="Address or hostname of the AMQP broker", default="localhost")
 @click.option("--image", "-i", help="File name which the image will be written to", required=True)
-@click.option("--chunks", "-c", help="Split the image to the number of chunks", default=1)
-def main(broker: str, image: str, chunks: int):
+def main(broker: str, image: str):
     # Initialize the communication channel
     channel = ImageChannel(broker, "image", image)
 

@@ -18,12 +18,17 @@ class Channel:
             exchange='', routing_key=self.name, body=response.SerializeToString())
 
     @abstractmethod
-    def handle_receive(self, ch, method, properties, body):
+    def handle_response(self, ch, method, properties, body):
         raise NotImplementedError()
 
     def start_subscribe(self):
-        def call_handle_receive(ch, method, properties, body):
-            self.handle_receive(ch, method, properties, body)
+        def handle_receive(ch, method, properties, body):
+            # Deserialize the response message received from the channel
+            response = Response()
+            response.ParseFromString(body)
+            # Call the callback to handle response
+            self.handle_response(response)
+
         self.channel_.basic_consume(
-            queue=self.name, on_message_callback=call_handle_receive, auto_ack=True)
+            queue=self.name, on_message_callback=handle_receive, auto_ack=True)
         self.channel_.start_consuming()
