@@ -11,11 +11,14 @@ class Channel:
         self.connection_ = pika.BlockingConnection(
             pika.ConnectionParameters(host=host))
         self.channel_ = self.connection_.channel()
-        self.channel_.queue_declare(queue=self.name)
+        self.channel_.queue_declare(queue=self.name, durable=True)
 
     def send_response(self, response: Response):
         self.channel_.basic_publish(
-            exchange='', routing_key=self.name, body=response.SerializeToString())
+            exchange='', routing_key=self.name, body=response.SerializeToString(),
+            properties=pika.BasicProperties(
+                delivery_mode=pika.DeliveryMode.Persistent,  # make message persistent
+            ))
 
     @abstractmethod
     def handle_response(self, ch, method, properties, body):

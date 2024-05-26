@@ -3,8 +3,8 @@ import io
 import click
 from PIL import Image
 
-from messages_pb2 import Response
 from channel import Channel
+from messages_pb2 import Response
 
 
 class ImageChannel(Channel):

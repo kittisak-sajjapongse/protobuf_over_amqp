@@ -2,8 +2,8 @@ from pathlib import Path
 
 import click
 
-from messages_pb2 import Response
 from channel import Channel
+from messages_pb2 import Response
 
 
 def calculate_chunk_sizes(file_size: int, num_chunks: int) -> list[int]:
@@ -46,6 +46,7 @@ def main(broker: str, chunks: int, image: str):
         s_offset += chunk_size
 
         # Publish the reponse
+        print(f"Sending image part {i+1} of {chunks}")
         channel.send_response(response)
 
 
