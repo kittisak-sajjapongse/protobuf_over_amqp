@@ -1,6 +1,11 @@
+.PHONY: clean
 
 all: messages_pb2.py
 	@echo Build successfully
 
-messages_pb2.py:
-	protoc --python_out=. messages.proto
+clean:
+	rm -f *_pb2.py
+	@echo Clean successfully
+
+messages_pb2.py: messages.proto
+	protoc --python_out=. $<
